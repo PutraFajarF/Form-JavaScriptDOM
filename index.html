@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Form Diri</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Isi Form Di bawah ini:</h1>
+    <!-- Form -->
+    <form id="form">
+      <!-- Full Name -->
+      <div class="form-group">
+        <label for="name">Nama Lengkap</label>
+        <input type="text" id="name" name="name" 
+          placeholder="Full Name">
+      </div>
+      <!-- Phone Number -->
+      <div class="form-group">
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" name="phone" 
+          placeholder="Isikan nomor hp">
+      </div>
+      <!-- Address -->
+      <div class="form-group">
+        <label for="address">Alamat</label>
+        <input type="text" id="address" name="address" 
+          placeholder="Isikan alamat lengkap">
+      </div>
+      <!-- Email Address -->
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" 
+          placeholder="email@address.com">
+      </div>
+      <!-- Checkbox -->
+      <div class="checkbox" id="checkbox">
+        <h4>Keahlian:</h4>
+        <input type="checkbox" id="bahasa" name="bahasa" value="java">Java<br>
+        <input type="checkbox" id="bahasa" name="bahasa" value="javascript">Javascript<br>
+        <input type="checkbox" id="bahasa" name="bahasa" value="react">React<br>
+        <input type="checkbox" id="bahasa" name="bahasa" value="golang">Golang<br>
+        <input type="checkbox" id="bahasa" name="bahasa" value="python">Phython<br>
+      </div>
+      <!-- Select -->
+      <select>
+        <option>Mobile Developer</option>
+        <option>Web Developer</option>
+      </select>
+      <button type="submit">Submit</button>
+    </form>
+     <!-- Error/Success Message -->
+    <div class="message-container">
+      <h3 id="message">Mohon diisi dengan benar!</h3>
+    </div>
+  </div>
+  <div class="output-table">
+    <table border="1">
+      <tr>
+          <td>Nama</td>
+          <td id="result-nama"></td>
+      </tr>
+      <tr>
+          <td>Phone Number</td>
+          <td id="result-number"></td>
+      </tr>
+      <tr>
+        <td>Alamat</td>
+        <td id="result-address"></td>
+      </tr>
+      <tr>
+        <td>Email</td>
+        <td id="result-email"></td>
+      </tr>
+      <tr>
+        <td>Keahlian</td>
+        <td id="result-checkbox"></td>
+      </tr>
+    </table>
+  </div>
+</body>
+
+<script>
+  const form = document.getElementById('form');
+  const nama = document.getElementById('name');
+  const nohp = document.getElementById('phone');
+  const address = document.getElementById('address');
+  const email = document.getElementById('email');
+  const checkbox = document.querySelectorAll('input[type=checkbox]')
+  const messageContainer = document.querySelector('.message-container');
+  const message = document.getElementById('message');
+  const getName =  document.getElementById('result-nama');
+  const getPhoneNumber = document.getElementById('result-number');
+  const getAddress = document.getElementById('result-address');
+  const getEmail = document.getElementById('result-email');
+  const getCheckBox = document.getElementById('result-checkbox');
+
+  function phoneNumberRegex(inputphone) {
+    let regexPhone = /(?:\+62)\d{2}(\d{8})/gm;
+    if (inputphone.value.match(regexPhone)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  function validateForm() {
+    var jumlahCheckbox = 0;
+    for (let i = 0; i < checkbox.length; i++) {
+      if (checkbox[i].checked) {
+        jumlahCheckbox++;
+      }
+    }
+    let regEmail = '[a-z0-9]+@[a-z]+\.[a-z]{2,3}'
+    let regexEmail = new RegExp(regEmail);
+    isEmailValid = regexEmail.test(email.value);
+    isValid = form.checkValidity();
+    isNamaValid = nama.value;
+    isPhoneValid = phoneNumberRegex(nohp);
+    isAdressValid = address.value;
+    if (!isValid) {
+      message.textContent = 'Mohon form diisi seluruhnya.';
+      message.style.color = 'red';
+      messageContainer.style.borderColor = 'red';
+      return;
+    }
+
+    if (isNamaValid === '') {
+      alert('Mohon untuk nama jangan dikosongkan');
+      message.textContent = 'Mohon untuk nama jangan dikosongkan';
+      message.style.color = 'red';
+      messageContainer.style.borderColor = 'red';
+      return clearOutput();
+    }
+
+    if (!isPhoneValid) {
+      alert('Mohon untuk nomor handphone jangan dikosongkan dan diawali +62');
+      message.textContent = 'Mohon untuk nomor handphone jangan dikosongkan dan diawali +62';
+      message.style.color = 'red';
+      messageContainer.style.borderColor = 'red';
+      return clearOutput();
+    }
+
+    if (isAdressValid === '') {
+      alert('Mohon untuk alamat jangan dikosongkan');
+      message.textContent = 'Mohon untuk alamat jangan dikosongkan';
+      message.style.color = 'red';
+      messageContainer.style.borderColor = 'red';
+      return clearOutput();
+    }
+
+    if (!isEmailValid) {
+      alert('Mohon untuk email jangan dikosongkan');
+      message.textContent = 'Mohon untuk alamat jangan dikosongkan';
+      message.style.color = 'red';
+      messageContainer.style.borderColor = 'red';
+      return clearOutput();
+    }
+
+    if (jumlahCheckbox == 0) {
+      alert('Mohon untuk mencentang salah 1 list keahlian yang dimiliki')
+      message.textContent = 'Mohon untuk mencentang salah 1 list keahlian yang dimiliki';
+      message.style.color = 'red';
+      messageContainer.style.borderColor = 'red';
+      return clearOutput();
+    }
+
+    if (isValid && isNamaValid && isPhoneValid && isAdressValid && isEmailValid && jumlahCheckbox) {
+      message.textContent = 'Registrasi berhasil';
+      message.style.color = 'green'
+      messageContainer.style.borderColor = 'green';
+      return clearOutput();
+    }
+  }
+
+  function calculateCheckbox() {
+    var arr = [];
+    var checkboxChecked = document.querySelectorAll('input[type=checkbox]:checked')
+    for (var i = 0; i < checkboxChecked.length; i++) {
+      arr.push(checkboxChecked[i].value)
+    }
+    console.log('arr', arr);
+    return arr;
+  }
+
+  function storeFormData() {
+    const user = {
+      name: form.name.value,
+      phone: form.phone.value,
+      alamat: form.address.value,
+      email: form.email.value,
+      checkbox: calculateCheckbox()
+    };
+    console.log(user);
+    getName.innerHTML = user.name;
+    getPhoneNumber.innerHTML = user.phone;
+    getAddress.innerHTML = user.alamat;
+    getEmail.innerHTML = user.email;
+    getCheckBox.innerHTML = user.checkbox;
+  }
+
+  function clearCheckbox() {
+    for (var i = 0; i < checkbox.length; i++) {
+      if (checkbox[i].checked = true) {
+        checkbox[i].checked = false
+      };
+    }
+    return;
+  }
+  
+  function clearOutput() {
+    getName.innerHTML = '';
+    getPhoneNumber.innerHTML = '';
+    getAddress.innerHTML = '';
+    getEmail.innerHTML = '';
+    getCheckBox.innerHTML = '';
+  }
+
+  function clearInput() {
+    form.value = ''
+    nama.value = ''
+    nohp.value = ''
+    address.value = ''
+    email.value = ''
+    clearCheckbox()
+  }
+  
+  function processFormData(e) {
+    e.preventDefault();
+    // Validate Form
+    validateForm();
+    // Submit Form if Valid
+    if (isValid && isNamaValid && isPhoneValid && isAdressValid && isEmailValid && calculateCheckbox() != 0) {
+      storeFormData();
+    }
+    clearInput();
+  }
+
+form.addEventListener('submit', processFormData);
+</script>
+
+</html>
